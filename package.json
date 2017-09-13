@@ -1,0 +1,23 @@
+{
+  "name": "babbelbox",
+  "version": "1.0.0",
+  "description": "Maarten's playground for REST and websockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaartenFaddegon/Babbelbox.git"
+  },
+  "author": "Maarten Faddegon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaartenFaddegon/Babbelbox/issues"
+  },
+  "homepage": "https://github.com/MaartenFaddegon/Babbelbox#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "socket.io": "^2.0.3"
+  }
+}

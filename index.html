@@ -25,9 +25,12 @@
      <button style="width: 6em" v-on:click="send">Send</button>
      </template>
      <template v-else>
-	<label>Username: </label>
-	<input v-model="username">
-	<button v-on:click="logon">Join!</button>
+       <div v-if="rejected">Username is already taken!</div>
+       <label>Username: </label>
+       <form>
+         <input v-model="username">
+         <button v-on:click="logon">Join!</button>
+       </form>
      </template>
     </div>
   <script>
@@ -40,6 +43,7 @@
        , myMessage : ''
        , users     : []
        , loggedOn  : false
+       , rejected  : false
        },
       methods:
        { logon : function () {
@@ -52,11 +56,15 @@
           }
        },
       created: function() {
+        console.log("there we go....");
         socket.on('chat message', function(msg) { this.messages.push(msg); }.bind(this));
         socket.on('users', function(newUsers) { this.users = newUsers; }.bind(this));
+        socket.on('reject', function(u) { console.log("REJECTED"); this.loggedOn = false; this.rejected = true; }.bind(this));
       },
       updated: function() {
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        if (this.loggedOn) {
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
       }
     });
   </script>

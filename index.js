@@ -12,13 +12,20 @@ http.listen(3000, function(){
 
 var users = {};
 
-function broadcastUsers() {
-  userNames = [];
+function userNames() {
+  names = [];
   for (idx in users) {
-    userNames.push(users[idx]);
+    names.push(users[idx]);
   }
-  console.log('userNames: ' + userNames);
-  io.emit('users', userNames);
+  return names;
+}
+
+function broadcastUsers() {
+  io.emit('users', userNames());
+}
+
+function existingUser(user) {
+  return userNames().indexOf(user) != -1;
 }
 
 io.on('connection', function(socket){
@@ -37,8 +44,13 @@ io.on('connection', function(socket){
   });
 
   socket.on('join', function(user){
-    console.log('joined: ' + user);
-    users[socket.id] = user;
-    broadcastUsers();
+    if (existingUser(user)) {
+      console.log('reject: ' + user);
+      socket.emit('reject', user);
+    } else {
+      console.log('joined: ' + user);
+      users[socket.id] = user;
+      broadcastUsers();
+    }
   });
 });

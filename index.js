@@ -12,11 +12,21 @@ http.listen(3000, function(){
 
 var users = {};
 
+function broadcastUsers() {
+  userNames = [];
+  for (idx in users) {
+    userNames.push(users[idx]);
+  }
+  console.log('userNames: ' + userNames);
+  io.emit('users', userNames);
+}
+
 io.on('connection', function(socket){
   console.log('a user connected');
   socket.on('disconnect', function(){
     console.log(users[socket.id] + ' disconnected');
     delete users[socket.id];
+    broadcastUsers();
   });
 
   socket.on('chat message', function(msg1){
@@ -29,5 +39,6 @@ io.on('connection', function(socket){
   socket.on('join', function(user){
     console.log('joined: ' + user);
     users[socket.id] = user;
+    broadcastUsers();
   });
 });

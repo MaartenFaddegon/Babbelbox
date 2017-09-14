@@ -10,6 +10,12 @@
     <div id="app">
     <h1 style="font-size: 2em">Maartens Babbelbox</h1>
     <template v-if="loggedOn">
+     <div id="userDiv" style="float:right">
+       <p style="text-decoration: underline">online:</p>
+       <ul style="list-style-type: none; margin: 0; padding: 0;">
+         <li v-for="u in users">{{u}}</li>
+       </ul>
+     </div>
      <div id="messagesDiv" style="height: calc(100vh - 9em); overflow-y:auto;">
        <ul style="list-style-type: none; margin: 0; padding: 0;">
          <li v-for="m in messages">{{m}}</li>
@@ -32,6 +38,7 @@
        { username  : ''
        , messages  : []
        , myMessage : ''
+       , users     : []
        , loggedOn  : false
        },
       methods:
@@ -40,11 +47,13 @@
            this.loggedOn = true;
          }
        , send : function () {
-          socket.emit('chat message', this.myMessage);
+            socket.emit('chat message', this.myMessage);
+	    this.myMessage = '';   
           }
        },
       created: function() {
         socket.on('chat message', function(msg) { this.messages.push(msg); }.bind(this));
+        socket.on('users', function(newUsers) { this.users = newUsers; }.bind(this));
       },
       updated: function() {
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
